@@ -71,7 +71,7 @@ public class PairwiseAlign {
 	 * @return Alignment
 	 */
 	public SequencePair<DNASequence, NucleotideCompound> getAlignment() {
-		return Alignments.getPairwiseAlignment(dna1, dna2, PairwiseSequenceAlignerType.GLOBAL, this.gapPenalty, this.subsMatrix);
+		return Alignments.getPairwiseAlignment(dna1, dna2, PairwiseSequenceAlignerType.LOCAL, this.gapPenalty, this.subsMatrix);
 	}
 	
 	/**
@@ -89,6 +89,7 @@ public class PairwiseAlign {
 		File fasta2 = new File(p.getStringArg("-f2"));
 		
 		// Read the two sequences from the fasta files
+		logger.info("Reading fastq files");
 		DNASequence seq1 = readSeqFromSingleSeqFasta(fasta1);
 		DNASequence seq2 = readSeqFromSingleSeqFasta(fasta2);
 		
@@ -100,9 +101,11 @@ public class PairwiseAlign {
 		PairwiseAlign pa = new PairwiseAlign(seq1, seq2);
 		
 		// Do the alignment
+		logger.info("Performing the alignment...");
 		SequencePair<DNASequence, NucleotideCompound> align = pa.getAlignment();
 		
 		// Analyze the alignment results
+		logger.info("Analyzing the alignment...");
 		List<AlignedSequence<DNASequence, NucleotideCompound>> alignments = align.getAlignedSequences();
 		for(AlignedSequence<DNASequence, NucleotideCompound> a : align) {
 			logger.info(Arrays.toString(a.getAlignmentFromSequence()));
